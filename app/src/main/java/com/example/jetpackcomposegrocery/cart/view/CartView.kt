@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -22,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.jetpackcomposegrocery.cart.viewModel.CartViewModel
-import com.example.jetpackcomposegrocery.components.showSnackbar
 import com.example.jetpackcomposegrocery.item.Item.currentSelectedItemIndex
 import com.example.jetpackcomposegrocery.item.Item.deletedItem
 import com.example.jetpackcomposegrocery.item.Item.isEditItem
@@ -52,14 +54,7 @@ fun CartView(
     LaunchedEffect(isItemDeleteSuccessful) {
         if (isItemDeleteSuccessful) {
             isShowSnackbar = true
-            showSnackbar(
-                message = "Deleted $deletedItem",
-                actionLabel = "Cancel",
-                duration = SnackbarDuration.Short,
-                scaffoldState = scaffoldState,
-                action = {},
-                dismiss = {}
-            )
+            vm.showSnackbarMessage(message = "Deleted $deletedItem", scaffoldState = scaffoldState)
             isItemDeleteSuccessful = false
         }
     }
@@ -87,7 +82,6 @@ fun CartView(
 
             )
         }
-
 
         Box {
             LazyColumn {
@@ -192,7 +186,7 @@ fun CartView(
 }
 
 @Composable
-fun RowScope.Label(name: String){
+fun RowScope.Label(name: String) {
     Text(
         text = name,
         fontSize = 18.sp,

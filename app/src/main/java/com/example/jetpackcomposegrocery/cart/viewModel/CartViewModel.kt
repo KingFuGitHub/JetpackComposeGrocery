@@ -110,7 +110,7 @@ class CartViewModel(
         }
     }
 
-    private fun showSnackbarMessage(message: String, scaffoldState: ScaffoldState) {
+    fun showSnackbarMessage(message: String, scaffoldState: ScaffoldState) {
         viewModelScope.launch {
             showSnackbar(
                 message = message,
