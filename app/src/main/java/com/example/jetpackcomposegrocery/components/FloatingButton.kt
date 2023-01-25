@@ -48,7 +48,7 @@ fun FloatingButton(
                             saveState = true
                         }
                         launchSingleTop = true
-                        restoreState = true
+//                        restoreState = true
                     }
                 },
                 backgroundColor = MaterialTheme.colors.onSurface.copy(0.85f),

@@ -23,6 +23,7 @@ class ChartViewModel(
     var totalQuantity by mutableStateOf(0.0)
         private set
 
+
     fun sumOfQuantity() {
         sumQuantity = 0.0
         viewModelScope.launch {

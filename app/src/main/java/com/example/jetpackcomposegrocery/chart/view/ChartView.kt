@@ -32,7 +32,6 @@ fun ChartView(
     vm: ChartViewModel,
     navController: NavHostController,
     scaffoldState: ScaffoldState,
-    paddingValue: PaddingValues
 ) {
 
     LaunchedEffect(Unit) {
@@ -40,13 +39,10 @@ fun ChartView(
         vm.sumOfQuantity()
     }
     Column(
-        Modifier
-            .fillMaxSize()
-            .padding(paddingValues = paddingValue),
+        Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-//        Text(text = "this is Chart view", fontSize = customFontSize(textUnit = 24.sp))
         val configurationOrientation = LocalConfiguration.current.orientation
 
         val animatedProcess by animateFloatAsState(
@@ -58,7 +54,6 @@ fun ChartView(
         )
 
         val animatedCircularProgressBarColor by animateColorAsState(
-//            targetValue = Color.Cyan,
             targetValue = MaterialTheme.colors.primary.copy(0.75f),
             animationSpec = tween(
                 durationMillis = 1,

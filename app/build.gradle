@@ -83,7 +83,6 @@ dependencies {
     // (to keep minSDK 21)
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'
 
-
     // Room
     implementation "androidx.room:room-runtime:2.5.0"
     kapt "androidx.room:room-compiler:2.5.0"

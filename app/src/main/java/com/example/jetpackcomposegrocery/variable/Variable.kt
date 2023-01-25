@@ -9,5 +9,4 @@ object Variable {
     var isShowSnackbar by mutableStateOf(false)
     var showMenu by mutableStateOf(false)
     var resetInputText by mutableStateOf(false)
-
 }

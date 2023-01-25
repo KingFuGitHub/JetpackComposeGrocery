@@ -37,12 +37,15 @@ fun BottomBar(
     AnimatedVisibility(
         visible = currentDestination?.route == Screens.CartScreen.route ||
                 currentDestination?.route == Screens.ChartScreen.route,
+//        visible = true,
         enter = slideInVertically(
-            initialOffsetY = { 200 },
+//            initialOffsetY = { 200 },
+            initialOffsetY = { 0 },
             animationSpec = tween(durationMillis = 100, easing = LinearEasing)
         ),
         exit = slideOutVertically(
-            targetOffsetY = { 200 },
+//            targetOffsetY = { 200 },
+            targetOffsetY = { 0 },
             animationSpec = tween(durationMillis = 100, easing = LinearEasing)
         ),
         content = {

@@ -1,11 +1,14 @@
 package com.example.jetpackcomposegrocery.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -79,15 +82,18 @@ fun AppNavHost() {
 
             }
         },
+
         content = { paddingValues ->
-            Navigation(
-                navController = navController,
-                scaffoldState = scaffoldState,
-                cartViewModel = cartViewModel,
-                chartViewModel = chartViewModel,
-                settingsViewModel = settingsViewModel,
-                paddingValues = paddingValues
-            )
+            Box(modifier = Modifier.padding(paddingValues)) {
+                Navigation(
+                    navController = navController,
+                    scaffoldState = scaffoldState,
+                    cartViewModel = cartViewModel,
+                    chartViewModel = chartViewModel,
+                    settingsViewModel = settingsViewModel,
+                )
+            }
+
         }
     )
 }

@@ -37,7 +37,6 @@ import com.example.jetpackcomposegrocery.variable.Variable.resetInputText
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddItemView(
-    paddingValues: PaddingValues,
     vm: CartViewModel,
     scaffoldState: ScaffoldState,
     navController: NavHostController
@@ -64,9 +63,9 @@ fun AddItemView(
     Column(
         Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollState).navigationBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
 
         OutlinedTextField(

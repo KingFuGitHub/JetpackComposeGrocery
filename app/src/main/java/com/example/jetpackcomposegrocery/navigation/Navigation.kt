@@ -1,6 +1,5 @@
 package com.example.jetpackcomposegrocery.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -21,9 +20,8 @@ fun Navigation(
     cartViewModel: CartViewModel,
     chartViewModel: ChartViewModel,
     settingsViewModel: SettingsViewModel,
-    paddingValues: PaddingValues
 
-) {
+    ) {
     NavHost(
         navController = navController,
         startDestination = Screens.CartScreen.route,
@@ -33,7 +31,6 @@ fun Navigation(
                 navController = navController,
                 scaffoldState = scaffoldState,
                 vm = cartViewModel,
-                paddingValue = paddingValues
             )
         }
 
@@ -42,7 +39,6 @@ fun Navigation(
                 navController = navController,
                 scaffoldState = scaffoldState,
                 vm = chartViewModel,
-                paddingValue = paddingValues
             )
         }
 
@@ -51,13 +47,11 @@ fun Navigation(
                 navController = navController,
                 scaffoldState = scaffoldState,
                 vm = settingsViewModel,
-                paddingValue = paddingValues
             )
         }
 
         composable(Screens.AddItemScreen.route) {
             AddItemView(
-                paddingValues = paddingValues,
                 vm = cartViewModel,
                 scaffoldState = scaffoldState,
                 navController = navController

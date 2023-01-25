@@ -31,8 +31,7 @@ import kotlinx.coroutines.launch
 fun SettingsView(
     navController: NavHostController,
     scaffoldState: ScaffoldState,
-    vm: SettingsViewModel,
-    paddingValue: PaddingValues
+    vm: SettingsViewModel
 ) {
     val scrollState: ScrollState = rememberScrollState()
     val haptic = LocalHapticFeedback.current
@@ -43,7 +42,6 @@ fun SettingsView(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(state = scrollState)
-            .padding(paddingValues = paddingValue)
     ) {
         Text(
             text = "Theme",

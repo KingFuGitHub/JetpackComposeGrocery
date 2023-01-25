@@ -38,8 +38,7 @@ import com.example.jetpackcomposegrocery.variable.Variable.isShowSnackbar
 fun CartView(
     vm: CartViewModel,
     navController: NavHostController,
-    scaffoldState: ScaffoldState,
-    paddingValue: PaddingValues
+    scaffoldState: ScaffoldState
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -59,11 +58,7 @@ fun CartView(
         }
     }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(paddingValues = paddingValue)
-    ) {
+    Column(Modifier.fillMaxSize()) {
         Column(modifier = Modifier.clickable {
             vm.addRandomItem()
         }) {
@@ -101,6 +96,9 @@ fun CartView(
                                         popUpTo(navController.graph.findStartDestination().id) {
                                             saveState = true
                                         }
+                                        launchSingleTop = true
+
+//                                        restoreState = true
                                     }
                                     vm.setCurrentSelectedItem(index = index)
                                 },
