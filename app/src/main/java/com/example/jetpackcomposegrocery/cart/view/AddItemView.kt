@@ -170,7 +170,7 @@ fun AddItemView(
             Button(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    vm.deleteItem()
+                    vm.deleteItemHelper()
                     navController.navigate(Screens.CartScreen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true

@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.example.jetpackcomposegrocery.repository.room.ItemData
 
 object Item {
@@ -16,15 +15,12 @@ object Item {
     var deletedItem by mutableStateOf("")
 
     fun addItem(itemData: ItemData) {
-        itemList.add(0, itemData)
+//        itemList.add(0, itemData)
+        itemList.add(itemData)
     }
 
     fun removeItem(index: Int) {
         itemList.removeAt(index)
-    }
-
-    fun loadItems(items: SnapshotStateList<ItemData>) {
-        itemList.addAll(items)
     }
 
     val items = mutableListOf(
@@ -59,7 +55,7 @@ object Item {
         "Yellow Banana",
         "Strawberry",
         "Refreshing waterlemon",
-        "Red peper",
+        "Red pepper",
         "Pork belly",
         "BBQ steak",
         "Hot dogs",

@@ -4,13 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -32,8 +31,10 @@ import com.example.jetpackcomposegrocery.item.Item.isItemDeleteSuccessful
 import com.example.jetpackcomposegrocery.item.Item.itemList
 import com.example.jetpackcomposegrocery.navigation.Screens
 import com.example.jetpackcomposegrocery.variable.Variable.isShowSnackbar
+import java.util.*
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CartView(
     vm: CartViewModel,
@@ -44,6 +45,9 @@ fun CartView(
     val screenHeight = configuration.screenHeightDp.dp
     val haptic = LocalHapticFeedback.current
     var isEnableClick by remember { mutableStateOf(true) }
+    val lazyListState = rememberLazyListState(
+
+    )
 
     val colorStops = arrayOf(
         0.95f to Color.Transparent,
@@ -53,12 +57,17 @@ fun CartView(
     LaunchedEffect(isItemDeleteSuccessful) {
         if (isItemDeleteSuccessful) {
             isShowSnackbar = true
-            vm.showSnackbarMessage(message = "Deleted $deletedItem", scaffoldState = scaffoldState)
+            vm.showSnackBarMessage(message = "Deleted $deletedItem", scaffoldState = scaffoldState)
             isItemDeleteSuccessful = false
         }
     }
 
-    Column(Modifier.fillMaxSize()) {
+    Column(
+        Modifier.fillMaxSize(),
+        horizontalAlignment = CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
         Column(modifier = Modifier.clickable {
             vm.addRandomItem()
         }) {
@@ -74,13 +83,15 @@ fun CartView(
                     .align(CenterHorizontally)
                     .background(Color.DarkGray),
                 thickness = 1.dp
-
             )
         }
 
         Box {
-            LazyColumn {
-                items(itemList.size) { index ->
+            LazyColumn(
+                state = lazyListState) {
+                items(
+                    count = itemList.size
+                ) { index ->
 
                     Column {
                         Row(
@@ -113,7 +124,7 @@ fun CartView(
                             ) {
 
                                 Text(
-                                    text = itemList[index].name,
+                                    text = itemList[itemList.size - index - 1].name,
                                     fontSize = 18.sp,
                                     textAlign = TextAlign.Center,
                                     overflow = TextOverflow.Ellipsis,
@@ -123,7 +134,7 @@ fun CartView(
                                 )
 
                                 Text(
-                                    text = vm.convertLongToDate(itemList[index].date),
+                                    text = vm.convertLongToDate(itemList[itemList.size - index - 1].date),
                                     fontSize = 16.sp,
                                     textAlign = TextAlign.Center,
                                     overflow = TextOverflow.Ellipsis,
@@ -133,7 +144,7 @@ fun CartView(
                             }
 
                             Text(
-                                text = itemList[index].ID,
+                                text = itemList[itemList.size - index - 1].ID,
                                 fontSize = 16.sp,
                                 textAlign = TextAlign.Center,
                                 overflow = TextOverflow.Ellipsis,
@@ -144,7 +155,7 @@ fun CartView(
                             )
 
                             Text(
-                                text = vm.formatNumberWithCommas(itemList[index].quantity),
+                                text = vm.formatNumberWithCommas(itemList[itemList.size - index - 1].quantity),
                                 fontSize = 16.sp,
                                 textAlign = TextAlign.Center,
                                 overflow = TextOverflow.Ellipsis,
@@ -163,6 +174,7 @@ fun CartView(
                         )
 
                         if (index == itemList.size - 1) {
+//                        if (index == 0  ) {
                             Spacer(modifier = Modifier.padding(vertical = screenHeight * 0.10f))
                         }
 

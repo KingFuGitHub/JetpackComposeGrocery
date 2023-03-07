@@ -15,14 +15,15 @@ import com.example.jetpackcomposegrocery.item.Item.deletedItem
 import com.example.jetpackcomposegrocery.item.Item.isItemDeleteSuccessful
 import com.example.jetpackcomposegrocery.item.Item.itemList
 import com.example.jetpackcomposegrocery.item.Item.items
+import com.example.jetpackcomposegrocery.item.Item.removeItem
 import com.example.jetpackcomposegrocery.navigation.Screens
 import com.example.jetpackcomposegrocery.repository.preferencesDataStore.CartPreferences
 import com.example.jetpackcomposegrocery.repository.room.ItemData
 import com.example.jetpackcomposegrocery.repository.room.ItemDatabase
-import com.example.jetpackcomposegrocery.repository.room.ItemRepository
 import com.example.jetpackcomposegrocery.variable.Variable.resetInputText
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneId
@@ -36,7 +37,9 @@ class CartViewModel(
 
     init {
         viewModelScope.launch {
-            loadListItem()
+            withContext(Dispatchers.IO) {
+                loadItems()
+            }
         }
     }
 
@@ -80,7 +83,7 @@ class CartViewModel(
                     itemQuantity.toInt() > 0 && itemQuantity.toInt() < Int.MAX_VALUE && itemQuantity.isDigitsOnly()
                 ) {
                     if (!isDuplicateID(itemID)) {
-                        showSnackbarMessage(
+                        showSnackBarMessage(
                             message = "ID already exist",
                             scaffoldState = scaffoldState
                         )
@@ -102,15 +105,15 @@ class CartViewModel(
                         scaffoldState = scaffoldState
                     )
                 } else {
-                    showSnackbarMessage("Invalid input(s)", scaffoldState = scaffoldState)
+                    showSnackBarMessage("Invalid input(s)", scaffoldState = scaffoldState)
                 }
             } catch (e: java.lang.Exception) {
-                showSnackbarMessage("Invalid input(s)", scaffoldState = scaffoldState)
+                showSnackBarMessage("Invalid input(s)", scaffoldState = scaffoldState)
             }
         }
     }
 
-    fun showSnackbarMessage(message: String, scaffoldState: ScaffoldState) {
+    fun showSnackBarMessage(message: String, scaffoldState: ScaffoldState) {
         viewModelScope.launch {
             showSnackbar(
                 message = message,
@@ -171,67 +174,69 @@ class CartViewModel(
                     )
                     itemList[currentSelectedItemIndex].name = itemName
                     itemList[currentSelectedItemIndex].quantity = itemQuantity.toInt()
-                    updateListItem(item)
+                    updateItem(item)
                     showSuccessMessage(
                         name = "Update",
                         scaffoldState = scaffoldState,
                         navController = navController
                     )
                 } else {
-                    showSnackbarMessage("Invalid input(s)", scaffoldState = scaffoldState)
+                    showSnackBarMessage("Invalid input(s)", scaffoldState = scaffoldState)
                 }
             } catch (e: Exception) {
-                showSnackbarMessage("Invalid input(s)", scaffoldState = scaffoldState)
+                showSnackBarMessage("Invalid input(s)", scaffoldState = scaffoldState)
             }
         }
     }
 
-    fun deleteItem() {
+    fun deleteItemHelper() {
+        val item = itemList[currentSelectedItemIndex]
+
         isItemDeleteSuccessful = true
-        deletedItem = itemList[currentSelectedItemIndex].name
+        deletedItem = item.name
+        removeItem(currentSelectedItemIndex)
         viewModelScope.launch {
-            ItemRepository(cartDatabase.itemDao()).deleteItem(
-                itemList[currentSelectedItemIndex]
-            )
+            withContext(Dispatchers.IO) {
+                deleteItem(item)
+            }
         }
-        Item.removeItem(currentSelectedItemIndex)
+    }
+
+    private suspend fun deleteItem(item: ItemData) {
+        cartDatabase.itemDao().delete(item)
     }
 
     fun addRandomItem() {
-        val randomItemName = items[(0 until items.size).random()]
-        val randomUUID = UUID.randomUUID().toString()
-        val randomQuantity = (1..1_111).random()
-        val item = ItemData(
-            randomItemName,
-            randomUUID,
-            randomQuantity,
-            System.currentTimeMillis()
-        )
-        Item.addItem(item)
-        saveListItem(item)
-    }
-
-    private suspend fun loadListItem() {
-        val items = ItemRepository(cartDatabase.itemDao()).readAllData.first().toMutableStateList()
-        Item.loadItems(items)
-    }
-
-    private fun saveListItem(item: ItemData) {
-        viewModelScope.launch {
-            ItemRepository(cartDatabase.itemDao()).addItem(item)
+        viewModelScope.launch(Dispatchers.Default) {
+            for (i in 0 until 1_000) {
+                val randomItemName = items[(0 until items.size).random()]
+                val randomUUID = UUID.randomUUID().toString()
+                val randomQuantity = (1..1_111).random()
+                val item = ItemData(
+                    randomItemName,
+                    randomUUID,
+                    randomQuantity,
+                    System.currentTimeMillis()
+                )
+                Item.addItem(item)
+                saveItem(item)
+            }
         }
     }
 
-    private fun updateListItem(item: ItemData) {
-        viewModelScope.launch {
-            ItemRepository(cartDatabase.itemDao()).updateItem(item)
-        }
+
+    private suspend fun loadItems() {
+        val items = cartDatabase.itemDao().getAll().toMutableStateList()
+        itemList.addAll(items)
     }
 
-    private fun saveItem(item: ItemData) {
-        viewModelScope.launch {
-            ItemRepository(cartDatabase.itemDao()).addItem(item)
-        }
+
+    private suspend fun updateItem(item: ItemData) {
+        cartDatabase.itemDao().update(item)
+    }
+
+    private suspend fun saveItem(item: ItemData) {
+        cartDatabase.itemDao().insert(item)
     }
 
 

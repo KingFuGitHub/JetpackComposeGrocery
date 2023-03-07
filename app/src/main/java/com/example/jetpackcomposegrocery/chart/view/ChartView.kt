@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.jetpackcomposegrocery.chart.viewModel.ChartViewModel
+import com.example.jetpackcomposegrocery.item.Item.itemList
 
 
 @Composable
@@ -38,6 +39,7 @@ fun ChartView(
         vm.totalOfQuantity()
         vm.sumOfQuantity()
     }
+
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,58 +63,52 @@ fun ChartView(
             )
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Box {
-                if (configurationOrientation == Configuration.ORIENTATION_PORTRAIT) {
-                    Canvas(
-                        modifier = Modifier
-                            .padding(bottom = 350.dp)
-                            .size(300.dp, 300.dp)
-                    ) {
-                        drawArc(
-                            brush = Brush.linearGradient(
-                                colors = listOf(
-                                    animatedCircularProgressBarColor,
-                                    Color.Blue.copy(0.75f),
-                                )
-                            ),
-                            startAngle = -90f,
-                            sweepAngle = 360 * animatedProcess,
-                            useCenter = false,
-                            style = Stroke(20f, cap = StrokeCap.Round)
-                        )
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(bottom = 350.dp)
+        Box {
+            if (configurationOrientation == Configuration.ORIENTATION_PORTRAIT) {
+                Canvas(
+                    modifier = Modifier.size(300.dp, 300.dp)
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "Total Quantity:",
-                            fontSize = 24.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(modifier = Modifier.padding(vertical = 5.dp))
-                        Text(
-                            text = vm.sumQuantity.toInt().toString(),
-                            fontSize = 24.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-
+                    drawArc(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                animatedCircularProgressBarColor,
+                                Color.Blue.copy(0.75f),
+                            )
+                        ),
+                        startAngle = -90f,
+                        sweepAngle = 360 * animatedProcess,
+                        useCenter = false,
+                        style = Stroke(20f, cap = StrokeCap.Round)
+                    )
                 }
+            }
+            Box(modifier = Modifier.align(Alignment.Center)) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Total Quantity:",
+                        fontSize = 24.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.padding(vertical = 5.dp))
+                    Text(
+                        text = vm.sumQuantity.toInt().toString(),
+                        fontSize = 24.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.padding(vertical = 5.dp))
+                    Text(
+                        text = "Items: ${itemList.size}",
+                        fontSize = 24.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
             }
         }
 
